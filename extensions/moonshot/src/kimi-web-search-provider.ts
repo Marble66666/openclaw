@@ -162,6 +162,9 @@ async function runKimiSearch(params: {
           },
           body: JSON.stringify({
             model: params.model,
+            // Kimi builtin $web_search requires thinking to be disabled for
+            // the assistant tool-call roundtrip to remain protocol-compatible.
+            thinking: { type: "disabled" },
             messages,
             tools: [KIMI_WEB_SEARCH_TOOL],
           }),

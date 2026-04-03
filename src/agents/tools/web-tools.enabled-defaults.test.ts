@@ -823,12 +823,22 @@ describe("web_search kimi provider", () => {
     const result = await tool?.execute?.("call-1", { query: "latest openclaw release" });
 
     expect(mockFetch).toHaveBeenCalledTimes(2);
+    const firstRequest = mockFetch.mock.calls[0]?.[1];
+    const firstBody = JSON.parse(
+      typeof firstRequest?.body === "string" ? firstRequest.body : "{}",
+    ) as {
+      thinking?: { type?: string };
+    };
+    expect(firstBody.thinking).toEqual({ type: "disabled" });
+
     const secondRequest = mockFetch.mock.calls[1]?.[1];
     const secondBody = JSON.parse(
       typeof secondRequest?.body === "string" ? secondRequest.body : "{}",
     ) as {
       messages?: Array<Record<string, unknown>>;
+      thinking?: { type?: string };
     };
+    expect(secondBody.thinking).toEqual({ type: "disabled" });
     const toolMessage = secondBody.messages?.find((message) => message.role === "tool") as
       | { content?: string; tool_call_id?: string }
       | undefined;
